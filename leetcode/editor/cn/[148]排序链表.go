@@ -52,7 +52,6 @@
 func sortList(head *ListNode) *ListNode {
     // 1. 将链表的值依次插入数组，数组排序完，依次赋值给链表
 
-    // 2.
 
 }
 //leetcode submit region end(Prohibit modification and deletion)

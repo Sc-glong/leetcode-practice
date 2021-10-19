@@ -31,6 +31,52 @@
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func sortArray(nums []int) []int {
+//    sort.Ints(nums)
+//    return nums
+//  冒泡排序
+//      for i:= 0;i<len(nums);i++ {
+//         for j:= 0;j<len(nums)-i-1;j++{
+//             if nums[j] > nums[j+1] {
+//                 tmp := nums[j+1]
+//                 nums[j+1] = nums[j]
+//                 nums[j] = tmp
+//             }
+//         }
+//      }
+//      return nums
 
+ // 快排
+//       quickSort(nums)
+//       return nums
+
+// 插入排序
+//        for i:=1;i<len(nums);i++ {
+//            for  j:=i;j>0&&nums[j]<nums[j-1];j-- {
+//               tmp := nums[j-1]
+//               nums[j-1] = nums[j]
+//               nums[j] = tmp
+//            }
+//        }
+//        return nums
 }
+func quickSort(nums []int){
+       if len(nums) < 1 {
+          return
+       }
+       left,right:= 0,len(nums) -1
+       flag := nums[0]
+       for i:=1;i<=right;{
+           if nums[i] > flag {
+              nums[i],nums[right] = nums[right] ,nums[i]
+              right--
+           } else {
+              nums[i],nums[left] = nums[left], nums[i]
+              i++
+              left++
+           }
+       }
+       quickSort(nums[:left])
+       quickSort(nums[left+1:])
+}
+
 //leetcode submit region end(Prohibit modification and deletion)

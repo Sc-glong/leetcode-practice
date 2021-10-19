@@ -25,6 +25,15 @@
  * }
  */
 func reversePrint(head *ListNode) []int {
-
+     arr := &[]int{}
+     reverse(head,arr)
+     return *arr
+}
+func reverse(head *ListNode, arr *[]int) {
+    if head == nil {
+       return
+    }
+    reverse(head.Next, arr)
+    *arr = append(*arr, head.Val)
 }
 //leetcode submit region end(Prohibit modification and deletion)

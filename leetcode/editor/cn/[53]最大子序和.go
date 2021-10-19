@@ -56,16 +56,30 @@
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func maxSubArray(nums []int) int {
-    max := nums[0]
-    length := len(nums)
-    for i:=1;i<length;i++ {
-        if nums[i] + nums[i-1] > nums[i] {
-              nums[i] += nums[i-1]
-        }
-        if nums[i] > max {
-           max = nums[i]
-        }
-    }
-    return max
+       // dp 算法
+//     max := nums[0]
+//     length := len(nums)
+//     for i:=1;i<length;i++ {
+//         if nums[i] + nums[i-1] > nums[i] {
+//               nums[i] += nums[i-1]
+//         }
+//         if nums[i] > max {
+//            max = nums[i]
+//         }
+//     }
+//     return max
+     // 贪心算法
+     result := math.MinInt32
+     count := 0
+     for i:=0;i<len(nums);i++ {
+         count += nums[i]
+         if count > result {
+            result = count
+         }
+         if count < 0 {
+            count = 0
+         }
+     }
+     return result
 }
 //leetcode submit region end(Prohibit modification and deletion)

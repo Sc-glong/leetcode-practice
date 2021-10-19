@@ -1,0 +1,255 @@
+首先，按照剑指offer设置这道题的目的，这道题绝对不可能是一道简单题，绝对是保medium冲hard的水平。之所以是简单题，是因为leetcode没有把它当作一道大数问题来考我们。
+
+# 
+
+### 方法一：绝对不可以的解法！
+
+# 
+
+做的时候我就说大数问题怎么可能只是简单难度，难道是leetcode没有把这道题当作一道大数问题吗？于是用了傻瓜解法试了一下，果然可以AC！
+
+# 
+
+### 先放C++代码，没有思路可言。面试的时候千万别这么写！
+
+* cpp
+
+```cpp
+class Solution {
+public:
+    vector<int> printNumbers(int n) {
+        if(n <= 0) return vector<int>(0);
+        vector<int> res;
+        int num = 1;
+        for(int i=0; i<n; ++i)
+            num *= 10; // 比如 n=3，num就是1000
+        for(int i=1; i<num; ++i) res.push_back(i);
+        return res;
+    }
+};
+```
+
+### 执行结果截图：
+
+![image.png](https://pic.leetcode-cn.com/1599102230-DPoOFO-image.png)
+
+# 
+
+### 方法二：用字符串模拟数字加法。
+
+- 首先要考虑到当n很大的时候（比如100），打印出来的数很有可能是超过了INT_MAX的范围的，所以我们用字符串来表示每个数。
+- 当然，在这一题中，由于返回的是一个 int 型的数组，所以是不可能超过INT_MAX的，但是一般大数问题都不会要求返回 int 数组来保存每一位数，而是循环输出每一位数。
+- 我们的思路就是，假设 n = 3，就定义一个字符串，初始化为 "000"，然后用它来循环模拟从1到最大的n位数，并循环保存到 int 数组中（在真实情况下则是循环输出）。
+
+### 先放 C++ 代码，思路清晰明了。已补充 Java 代码。
+
+* []
+
+```cpp
+class Solution {
+public:
+    vector<int> output;
+    vector<int> printNumbers(int n) {
+        // 以下注释的前提：假设 n = 3
+        if(n <= 0) return vector<int>(0);
+        string s(n, '0'); // s最大会等于999，即s的长度为n
+        while(!overflow(s)) inputNumbers(s);
+        return output;
+    }
+    bool overflow(string& s)
+    {
+        // 本函数用于模拟数字的累加过程，并判断是否越界（即 999 + 1 = 1000，就是越界情况）
+        bool isOverFlow = false;
+        int carry = 0; // carry表示进位
+        for(int i=s.length()-1; i>=0; --i)
+        {
+            int current = s[i] - '0' + carry; // current表示当前这次的操作
+            if(i == s.length() - 1) current ++; // 如果i此时在个位，current执行 +1 操作
+            if(current >= 10)
+            {
+                // 假如i已经在最大的那一位了，而current++之后>=10，说明循环到头了，即999 + 1 = 1000
+                if(i == 0) isOverFlow = true;
+                else
+                {
+                    // 只是普通进位，比如current从9变成10
+                    carry = 1;
+                    s[i] = current - 10 + '0'; 
+                }
+            }
+            else
+            {
+                // 如果没有进位，更新s[i]的值，然后直接跳出循环，这样就可以回去执行inputNumbers函数了，即往output里添加元素
+                s[i] = current + '0';
+                break;
+            }
+        }
+        return isOverFlow;
+    }
+    void inputNumbers(string s)
+    {
+        // 本函数用于循环往output中添加符合传统阅读习惯的元素。比如001，我们会添加1而不是001。
+        bool isUnwantedZero = true; // 判断是否是不需要添加的0，比如001前面的两个0
+        string temp = "";
+        for(int i=0; i<s.length(); ++i)
+        {
+            if(isUnwantedZero && s[i] != '0') isUnwantedZero = false;
+            if(!isUnwantedZero) temp += s[i];
+        }
+        output.push_back(stoi(temp));
+    }
+};
+```
+
+* []
+
+```Java
+class Solution {
+    private int[] output;
+    private int index;
+
+    public int[] printNumbers(int n) {
+        output = new int[(int)Math.pow(10, n) - 1];
+        index = 0;
+
+        char[] c = new char[n];
+        for (int i = 0; i < n; ++i) { c[i] = '0'; }
+
+        while (!overflow(c)) { inputNumbers(c); }
+
+        return output;
+    }
+
+    private boolean overflow(char[] c) {
+        boolean isOverFlow = false;
+        int carry = 0;
+
+        for (int i = c.length - 1; i >= 0; --i) {
+            int current = c[i] - '0' + carry;
+            if (i == c.length - 1) { ++current; }
+
+            if (current >= 10) {
+                if (i == 0) { 
+                    isOverFlow = true; 
+                    break; 
+                } else {
+                    carry = 1;
+                    c[i] = (char) (current - 10 + '0');
+                }
+            } else {
+                c[i] = (char) (current + '0');
+                break;
+            }  
+        }
+
+        return isOverFlow;
+    }
+
+    private void inputNumbers(char[] c) {
+        if (c == null) { return; }
+
+        StringBuilder s = new StringBuilder();
+        boolean isUnwantedZero = true;
+
+        for (char sign : c) {
+            if (isUnwantedZero && sign != '0') { isUnwantedZero = false; }
+            if (!isUnwantedZero) { s.append(String.valueOf(sign)); }
+        }
+
+        output[index++] = Integer.parseInt(s.toString());
+    }
+}
+```
+
+### 执行结果截图：
+
+![image.png](https://pic.leetcode-cn.com/1599136119-ToFwRZ-image.png)
+
+# 
+
+### 知识点扩展：char与int之间的加减法（比如 1 + '0' 和 '1' - '0'）
+
+- 首先我们看一下ASCII表，会发现红框部分是int型[0, 9]的char值[48, 57]，它们是连在一起的。
+  ![image.png](https://pic.leetcode-cn.com/1599136258-qVrwyp-image.png)
+
+# 
+
+- 所以，如果我们用一个char与一个int相加，我们会得到一个char。比如：'0' + 1 = 48 + 1 = 49 = '1'。
+- 如果我们用一个char减去另一个char，我们会得到一个int。比如：'2' - '0' = 50 - 48 = 2。
+- 所以，如果我们想把一个int型的数（比如 i = 5）转成char型，我们可以写成：`char c = i + '0';`。
+- 如果我们想把一个char型的数（比如 c = '5'）转成int型，我们可以写成：`int i = c - '0'`。
+
+# 
+
+### 方法三：递归全排列解法。
+
+# 
+
+假设 n = 3，要输出的数其实就是三位数的全排列（000，001，002，...，999，当然 000 不能输出），我们用递归来表示出这个过程即可。
+
+# 
+
+### 先放C++代码，思路清晰明了。
+
+* cpp
+
+```cpp
+class Solution {
+public:
+    vector<int> output;
+    vector<int> printNumbers(int n) {
+        if(n <= 0) return vector<int>(0);
+        string s(n, '0');
+        for(int i=0; i<=9; ++i)
+        {
+            s[0] = i + '0';
+            permutation(s, s.length(), 1);
+        }
+        return output;
+    }
+    void permutation(string& s, int length, int pos)
+    {
+        // 这个函数的执行机制我想了好久才弄明白，mark一下，对带有循环的递归有时候还挺绕的
+        if(pos == length)
+        {
+           inputNumbers(s);
+           return; 
+        }
+        for(int i=0; i<=9; ++i)
+        {
+            s[pos] = i + '0';
+            permutation(s, length, pos + 1);
+        }
+    }
+    void inputNumbers(string s)
+    {
+        // 本函数与方法二的同名函数基本一样
+        bool isUnwantedZero = true;
+        string temp = "";
+        for(int i=0; i<s.length(); ++i)
+        {
+            if(isUnwantedZero && s[i] != '0') isUnwantedZero = false;
+            if(!isUnwantedZero) temp += s[i];
+        }
+        if(temp != "") output.push_back(stoi(temp)); // 如果 s = "000"，则temp会是空，stoi无法执行，会报错
+    }
+};
+```
+
+### 执行结果截图：
+
+![image.png](https://pic.leetcode-cn.com/1599213635-ELeNzR-image.png)
+
+# 
+
+### 一点call out
+
+- 这道题其实真心不简单，特别如果面试的时候考到 + 第一次遇到这道题，我很大概率做不出来。
+- mark一下这道题的方法三（递归解法），二刷的时候重新理解一下，看看上完研究生第一学期的算法课之后会不会能秒掉它。大家共勉吧！
+
+# 
+
+### Tracker
+
+1. 1刷：2020/09/03
+2. 2刷：2021/03/11
+

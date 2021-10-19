@@ -1,0 +1,62 @@
+**方法1 哈希字典**
+![1630813894.png](https://pic.leetcode-cn.com/1630813941-YKgAUc-1630813894.png)
+
+* js
+
+```js
+var findRepeatNumber = function(nums) {
+    let obj = {}
+    let cur
+    for(let i = 0; i < nums.length; i++){
+        cur = nums[i]
+        if(obj[cur] == true){
+            return cur
+        }else{
+            obj[cur] = true
+        }
+    }
+}
+```
+
+---
+
+**方法2 排序**
+![image.png](https://pic.leetcode-cn.com/1630813934-FPihFs-image.png)
+
+* js
+
+```js
+var findRepeatNumber = function(nums){
+    nums.sort()
+    for(let i = 0; i < nums.length - 1; i++){
+       if(nums[i] == nums[i + 1]) {
+            return nums[i]
+        }
+    }
+}
+```
+
+---
+
+**方法3 原地交换**
+![image.png](https://pic.leetcode-cn.com/1630813813-dcbAjm-image.png)
+
+* js
+
+```js
+var findRepeatNumber = function(nums){
+    let cur
+    for(let i = 0; i < nums.length; i++){
+        while (nums[i] != i) {
+            cur = nums[i]
+            if (nums[i] == nums[cur]) {
+                return nums[i];
+            }else{
+                nums[i] = nums[cur];
+                nums[cur] = cur;
+            }
+        }
+    }
+}
+```
+

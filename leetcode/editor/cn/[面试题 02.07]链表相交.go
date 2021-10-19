@@ -90,8 +90,11 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
           pa = pa.Next
        }
        if pb == nil {
-          pb = 
+          pb = headA
+       } else {
+          pb = pb.Next
        }
     }
+    return pa
 }
 //leetcode submit region end(Prohibit modification and deletion)
