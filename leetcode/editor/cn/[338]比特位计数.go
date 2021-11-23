@@ -23,6 +23,28 @@
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func countBits(n int) []int {
+         //最低设置位
+//      res := make([]int, n+1)
+//      for i:=1;i<=n;i++{
+//         res[i] = res[i&(i-1)] + 1
+//      }
+//      return res
+        //最高有效位
+//         res := make([]int, n+1)
+//         highbit := 0
+//         for i:=1;i<=n;i++{
+//            if i&(i-1) == 0 {
+//                 highbit = i
+//            }
+//            res[i] = res[i-highbit] + 1
+//         }
+//         return res
+        //最低有效位
+        res := make([]int, n+1)
+        for i:=1;i<=n;i++{
+           res[i] = res[i>>1] + i&1
+        }
+        return res
 
 }
 //leetcode submit region end(Prohibit modification and deletion)

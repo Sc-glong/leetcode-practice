@@ -45,6 +45,35 @@
 
 //leetcode submit region begin(Prohibit modification and deletion)
 func longestPalindrome(s string) string {
-
+  if len(s) < 2 {
+     return s
+  }
+  begin, end := 0, 0
+  m := make([][]int, len(s))
+  for i:=0;i<len(s);i++ {
+     m[i] = make([]int, len(s))
+     m[i][i] = 1
+  }
+  for n:= 2;n<=len(s);n++ {
+     for i:=0;i<len(s);i++ {
+        j := n+i-1
+        if j >=len(s) {
+           break
+        }
+        if s[i] != s[j] {
+            m[i][j] = 0
+        } else {
+              if j-i == 1 {
+                 m[i][j] =1
+              }else {
+                 m[i][j] = m[i+1][j-1]
+              }
+        }
+        if m[i][j] > 0 && j-i>end-begin {
+             begin,end = i, j
+        }
+     }
+  }
+  return string(s[begin:end+1])
 }
 //leetcode submit region end(Prohibit modification and deletion)
